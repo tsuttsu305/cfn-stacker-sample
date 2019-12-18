@@ -1,0 +1,23 @@
+---
+namespace: ${namespace}
+
+stacker_bucket: stacker-tpl-${namespace}
+
+sys_path: .
+
+stacks:
+  - name: vpc
+    class_path: blueprints.vpc.Vpc
+    variables:
+      CidrBlock: '10.0.0.0/16'
+      PublicSubnets:
+        - '10.0.0.0/24'
+        - '10.0.1.0/24'
+      PrivateSubnets:
+        - '10.0.128.0/24'
+        - '10.0.129.0/24'
+  - name: instance
+    class_path: blueprints.instance.Instance
+    variables:
+      SubnetId: ${output vpc::PublicSubnet0}
+      ImageId: ami-0c3fd0f5d33134a76
